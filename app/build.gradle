@@ -1,0 +1,75 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    //png图片命名带有数字则编译不通过使用一下声明
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+    //apache使用声明
+    useLibrary 'org.apache.http.legacy'
+
+    defaultConfig {
+        applicationId "com.cxwl.weather.eye"
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode 12
+        versionName "1.1.2"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'armeabi'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('/Users/shawn/Desktop/打包/天气网眼/WeatherEye.keystore')
+            storePassword "123456"
+            keyAlias "weathereye"
+            keyPassword "123456"
+        }
+    }
+
+    //打包，自动追加版本号、名称
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "WeatherEye" + "_" + "${defaultConfig.versionCode}" + "_V" + "${defaultConfig.versionName}" + "_" + buildType.name + ".apk"
+            }
+    }
+
+}
+
+dependencies {
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation files('libs/txrtmpsdk.jar')
+    implementation files('libs/uk-co-senab-photoview.jar')
+    implementation files('libs/zxing.jar')
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okio:okio:1.14.1'
+    implementation 'com.amap.api:3dmap:5.7.0'
+//    implementation 'com.amap.api:search:5.7.0'
+    implementation 'com.amap.api:location:3.7.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation files('libs/umeng-common-1.5.3.jar')
+    implementation files('libs/umeng-share-core-6.9.3.jar')
+    implementation files('libs/umeng-sharetool-6.9.3.jar')
+    implementation files('libs/umeng-shareboard-widget-6.9.3.jar')
+    implementation files('libs/umeng-share-QQ-simplify-6.9.3.jar')
+    implementation files('libs/umeng-share-sms-6.9.3.jar')
+    implementation files('libs/umeng-share-wechat-simplify-6.9.3.jar')
+}
